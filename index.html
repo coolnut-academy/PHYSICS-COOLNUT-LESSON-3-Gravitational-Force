@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>ฟิสิกส์ ม.4: แรงโน้มถ่วงระหว่างมวล | CoolNut Space Academy</title>
+  <meta name="description" content="เว็บแอปพลิเคชันสำหรับการเรียนรู้ ฝึกทำโจทย์ และสอบเก็บคะแนน เรื่องแรงโน้มถ่วงระหว่างมวล สรุปสูตรลัด แบบฝึกหัด 20 ข้อ พร้อมระบบสุ่มโจทย์และสอบจับเวลา 15 นาที">
+  <link rel="stylesheet" href="style.css">
+  <!-- MathJax 3 with LaTeX and CHTML output -->
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        processEscapes: true
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🚀</text></svg>">
+</head>
+<body>
+
+  <!-- Starfield Canvas Background -->
+  <canvas id="space-canvas"></canvas>
+
+  <div class="app-wrapper">
+    <!-- Mission Header Navigation -->
+    <header class="mission-header">
+      <div class="container nav-content">
+        <div class="brand-logo" id="brand-home-btn" title="กลับสู่หน้าหลัก">
+          <div class="rocket-icon-pulse">🚀</div>
+          <div class="brand-text">
+            <h1>COOLNUT PHYSICS</h1>
+            <span>GRAVITATIONAL FORCE • LESSON 3</span>
+          </div>
+        </div>
+
+        <nav class="nav-pills" role="tablist">
+          <button class="nav-btn active" data-tab="tab-learning" id="tab-btn-learning" role="tab" aria-selected="true">
+            <span>🪐</span> <span>เรียนรู้สูตร</span>
+          </button>
+          <button class="nav-btn" data-tab="tab-practice" id="tab-btn-practice" role="tab" aria-selected="false">
+            <span>🛰️</span> <span>คลังโจทย์ 20 ข้อ</span>
+          </button>
+          <button class="nav-btn exam-tab" data-tab="tab-exam" id="tab-btn-exam" role="tab" aria-selected="false">
+            <span>⏱️</span> <span>ห้องสอบ 15 นาที</span>
+          </button>
+        </nav>
+
+        <button class="sound-toggle" id="sound-toggle-btn" title="เปิด/ปิด เสียงเอฟเฟกต์">
+          <span id="sound-icon">🔊</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="container">
+      <!-- Hero Banner -->
+      <section class="hero-banner">
+        <div class="badge-tag">🌌 SPACE ROCKET SCIENCE GALAXY</div>
+        <h2 class="hero-title">แรงโน้มถ่วงระหว่างมวล</h2>
+        <p class="hero-desc">
+          ภารกิจพิชิตอวกาศ: สรุปสูตรลัด • วิธีคิดอัตราส่วนแบบไม่ต้องแทนค่า G • แบบฝึกหัด 20 ข้อ พร้อมสอบเก็บคะแนน 15 นาที
+        </p>
+      </section>
+
+      <!-- ===================================================================
+           TAB 1: โหมดเรียนรู้ (Learning & Sandbox)
+           =================================================================== -->
+      <section id="tab-learning" class="tab-pane active" role="tabpanel">
+        
+        <!-- Interactive Gravity Sandbox Widget -->
+        <div class="glass-card sandbox-wrapper">
+          <div class="section-header-title">
+            <span class="icon">🔬</span>
+            <div>
+              <h3>ห้องแล็บจำลองแรงโน้มถ่วง (Gravity Sandbox)</h3>
+              <p style="font-size: 0.85rem; color: var(--text-secondary); font-weight: normal;">
+                ทดลองปรับค่ามวล (M) และรัศมี (R) ของดาวเคราะห์ เพื่อสังเกตค่าสนามโน้มถ่วง (g) น้ำหนักวัตถุ และการตกอิสระแบบ Real-time
+              </p>
+            </div>
+          </div>
+
+          <div class="sandbox-layout">
+            <div class="sandbox-controls">
+              <div class="control-group">
+                <div class="control-header">
+                  <label for="slider-mass">มวลของดาวเคราะห์ (M / M_โลก):</label>
+                  <span class="control-val" id="val-mass">1.0 เท่า</span>
+                </div>
+                <input type="range" id="slider-mass" class="cosmic-slider" min="0.25" max="16" step="0.25" value="1">
+              </div>
+
+              <div class="control-group">
+                <div class="control-header">
+                  <label for="slider-radius">รัศมีของดาวเคราะห์ (R / R_โลก):</label>
+                  <span class="control-val" id="val-radius">1.0 เท่า</span>
+                </div>
+                <input type="range" id="slider-radius" class="cosmic-slider" min="0.5" max="6" step="0.25" value="1">
+              </div>
+
+              <button class="btn btn-primary" id="btn-sim-drop" style="width: 100%;">
+                <span>☄️</span> ปล่อยวัตถุจำลองการตกอิสระ
+              </button>
+            </div>
+
+            <div class="sandbox-display">
+              <div class="planet-visual-container">
+                <div class="planet-sphere" id="sim-planet"></div>
+                <div class="rocket-drop-sim" id="sim-rocket">🚀</div>
+              </div>
+              
+              <div class="sandbox-metrics">
+                <div class="metric-card">
+                  <span class="title">สนามโน้มถ่วง (g)</span>
+                  <span class="val" id="metric-g">1.00 g_E</span>
+                </div>
+                <div class="metric-card">
+                  <span class="title">น้ำหนักวัตถุ 80N</span>
+                  <span class="val" id="metric-w">80.0 N</span>
+                </div>
+                <div class="metric-card">
+                  <span class="title">เวลาตกจาก h</span>
+                  <span class="val" id="metric-t">1.00 s</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Dynamic Summary Sections from PHYSICS_DATA -->
+        <div id="learning-sections-container"></div>
+      </section>
+
+      <!-- ===================================================================
+           TAB 2: โหมดฝึกทำโจทย์ (Practice Mode 20 Questions)
+           =================================================================== -->
+      <section id="tab-practice" class="tab-pane" role="tabpanel">
+        <div class="practice-toolbar">
+          <div class="search-box">
+            <span class="search-icon">🔍</span>
+            <input type="text" id="practice-search-input" class="search-input" placeholder="ค้นหาโจทย์ เช่น น้ำหนัก, เวลาตก, รัศมี...">
+          </div>
+
+          <div class="filter-pills" id="category-filter-container">
+            <button class="filter-btn active" data-filter="all">ทั้งหมด (20 ข้อ)</button>
+            <button class="filter-btn" data-filter="freefall-radius-mass">เวลาตก + รัศมี ➔ มวล</button>
+            <button class="filter-btn" data-filter="weight-radius-mass">น้ำหนักที่ผิวดาว</button>
+            <button class="filter-btn" data-filter="mass-radius-time">มวล + รัศมี ➔ เวลา</button>
+            <button class="filter-btn" data-filter="mass-time-radius">มวล + เวลา ➔ รัศมี</button>
+            <button class="filter-btn" data-filter="newton-force-ratio">กฎแรงโน้มถ่วงนิวตัน</button>
+            <button class="filter-btn" data-filter="height-gravity">ความสูงเหนือผิวดาว</button>
+          </div>
+        </div>
+
+        <!-- Practice Questions List -->
+        <div id="practice-list-container"></div>
+      </section>
+
+      <!-- ===================================================================
+           TAB 3: โหมดสอบเก็บคะแนน 15 นาที (Exam Mode)
+           =================================================================== -->
+      <section id="tab-exam" class="tab-pane" role="tabpanel">
+        
+        <!-- Pre-exam Login Card -->
+        <div class="glass-card exam-preflight" id="exam-preflight-card">
+          <div class="section-header-title" style="justify-content: center;">
+            <span class="icon">🚀</span>
+            <h3>ระบบสอบเก็บคะแนนออนไลน์: แรงโน้มถ่วงระหว่างมวล</h3>
+          </div>
+
+          <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">
+            กรุณากรอกข้อมูลส่วนตัวให้ถูกต้องครบถ้วนเพื่อลงทะเบียนเข้าสู่ห้องสอบ
+          </p>
+
+          <form id="student-registration-form" onsubmit="return false;">
+            <div class="form-group">
+              <label for="student-name">ชื่อ - นามสกุล นักเรียน *</label>
+              <input type="text" id="student-name" class="cosmic-input" placeholder="เช่น ด.ช. ธนกร มุ่งมั่นใจ" required>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="student-room">ระดับชั้น / ห้อง *</label>
+                <input type="text" id="student-room" class="cosmic-input" placeholder="เช่น ม.4/1" required>
+              </div>
+              <div class="form-group">
+                <label for="student-number">เลขที่ *</label>
+                <input type="number" id="student-number" class="cosmic-input" placeholder="เช่น 15" min="1" max="99" required>
+              </div>
+            </div>
+
+            <div class="exam-rule-list">
+              <div>⏱️ <strong>เวลาในการสอบ:</strong> 15 นาที (นับถอยหลังต่อเนื่อง หากหมดเวลาจะส่งคำตอบที่ทำไว้ตรวจทันที)</div>
+              <div>🎲 <strong>จำนวนข้อสอบ:</strong> 4 ข้อ สุ่มจาก 20 ข้อ พร้อมสุ่มตัวเลขใหม่ทุกครั้ง</div>
+              <div>📝 <strong>ข้อ 1 - 2 (ปรนัย):</strong> ข้อละ 2.0 คะแนน (รวม 4.0 คะแนน) ยอมรับคำตอบทศนิยมคลาดเคลื่อน ±0.05</div>
+              <div>✏️ <strong>ข้อ 3 - 4 (เติมคำ+หน่วย):</strong> ข้อละ 3.0 คะแนน (รวม 6.0 คะแนน: ตัวเลข 2.0 คะแนน + หน่วย 1.0 คะแนน)</div>
+              <div>🎯 <strong>คะแนนรวม:</strong> 10.0 คะแนนเต็ม (ระบบจะสรุปคะแนน แสดงเฉลย และฉลองเมื่อกดส่งข้อสอบแล้วเท่านั้น)</div>
+              <div>🛡️ <strong>ระบบกันโกง:</strong> บันทึกเวลาเริ่ม-ส่ง และจำข้อสอบเดิมป้องกันการรีเฟรชหนีข้อสอบ</div>
+              <div>🐱 <strong>รางวัลพิเศษ:</strong> หากสอบได้ 10 คะแนนเต็ม จะมีแมวอวกาศออกมาเต้นฉลอง!</div>
+            </div>
+
+            <button type="button" class="btn btn-gold" id="btn-start-exam" style="width: 100%; font-size: 1.1rem; padding: 0.85rem;">
+              <span>🚀</span> ยืนยันข้อมูลและเริ่มทำข้อสอบ (จับเวลา 15 นาที)
+            </button>
+          </form>
+        </div>
+
+        <!-- Active Exam Screen (Hidden initially) -->
+        <div id="exam-active-screen" style="display: none;">
+          <!-- Sticky HUD Bar -->
+          <div class="exam-hud">
+            <div class="student-badge-hud">
+              <span style="font-size: 1.5rem;">👨‍🚀</span>
+              <div>
+                <div class="name" id="hud-student-name">นักเรียน</div>
+                <div class="info" id="hud-student-info">ชั้น ม.4/1 • เลขที่ 01</div>
+              </div>
+            </div>
+
+            <div class="timer-container" id="timer-box">
+              <span>⏳</span>
+              <span class="timer-digits" id="exam-countdown">15:00</span>
+            </div>
+
+            <button class="btn btn-danger" id="btn-hud-submit">
+              <span>📤</span> ส่งข้อสอบ
+            </button>
+          </div>
+
+          <!-- Exam Questions Container -->
+          <div id="exam-questions-container"></div>
+
+          <!-- Bottom Submit Bar -->
+          <div class="submit-bar">
+            <div>
+              <h4 style="color: #fff;">ตรวจทานคำตอบให้เรียบร้อยก่อนส่ง</h4>
+              <p style="font-size: 0.85rem; color: var(--text-secondary);">เมื่อส่งแล้วจะไม่สามารถแก้ไขคำตอบได้ และระบบจะคำนวณคะแนนทันที</p>
+            </div>
+            <button class="btn btn-gold" id="btn-bottom-submit" style="font-size: 1.05rem; padding: 0.75rem 1.75rem;">
+              <span>🚀</span> ยืนยันการส่งข้อสอบ
+            </button>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Mission Footer -->
+    <footer class="mission-footer">
+      <div class="container">
+        <p>CoolNut Academy • Gravitational Force Physics Interactive WebApp</p>
+        <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.35rem;">
+          Designed for Mobile, Tablet & PC • Ready for GitHub Pages
+        </p>
+      </div>
+    </footer>
+  </div>
+
+  <!-- =======================================================================
+       Modal: Exam Result, Cat Dance Celebration & Official Score Slip
+       ======================================================================= -->
+  <div class="modal-overlay" id="exam-result-modal">
+    <div class="result-card-modal">
+      
+      <!-- Full Score Celebration Section (Cat Dance) -->
+      <div class="celebration-box" id="celebration-box">
+        <div class="cat-dance-frame">
+          <img src="./cat_dance.gif" alt="Cat Dancing Celebration" class="cat-dance-img">
+        </div>
+        <h3 class="celebrate-title">🎉 ยินดีด้วย! คุณได้ 10 คะแนนเต็ม! 🎉</h3>
+        <p style="color: var(--gold-glow); font-size: 1rem;">ยอดเยี่ยมมาก! กัปตันอวกาศรุ่นใหม่ผู้เชี่ยวชาญฟิสิกส์แรงโน้มถ่วงพิชิต 10 เต็ม 10!</p>
+      </div>
+
+      <!-- General Title for non-full score -->
+      <div id="normal-result-header" style="text-align: center; margin-bottom: 1.25rem;">
+        <h3 style="font-size: 1.5rem; color: #fff;">สรุปผลการสอบเก็บคะแนน</h3>
+        <p style="color: var(--text-secondary); font-size: 0.9rem;">เรื่อง แรงโน้มถ่วงระหว่างมวล (15 นาที)</p>
+      </div>
+
+      <!-- Score Summary Board -->
+      <div class="score-board">
+        <div>
+          <div class="label">คะแนนรวม</div>
+          <div class="score-number" id="res-score-total">0.0 / 10.0</div>
+        </div>
+        <div>
+          <div class="label">คิดเป็นร้อยละ</div>
+          <div class="score-number" id="res-percentage" style="color: var(--purple-glow);">0%</div>
+        </div>
+        <div>
+          <div class="label">เวลาที่ใช้ไป</div>
+          <div class="score-number" id="res-duration" style="font-size: 1.6rem; color: var(--gold-glow);">00:00</div>
+        </div>
+      </div>
+
+      <!-- Official Digital Score Slip -->
+      <div class="score-slip-card" id="official-score-slip">
+        <span class="slip-watermark">OFFICIAL SLIP</span>
+        <div class="slip-title">🪐 บัตรรายงานผลการสอบฟิสิกส์ (Digital Score Slip)</div>
+        <p style="font-size: 0.8rem; color: var(--text-secondary);">CoolNut Physics Academy • Lesson 3 Gravitational Force</p>
+
+        <div class="slip-meta-grid">
+          <div><strong>ชื่อ-นามสกุล:</strong> <span id="slip-name">-</span></div>
+          <div><strong>ระดับชั้น:</strong> <span id="slip-room">-</span></div>
+          <div><strong>เลขที่:</strong> <span id="slip-number">-</span></div>
+          <div><strong>เวลาเริ่มสอบ:</strong> <span id="slip-start-time">-</span></div>
+          <div><strong>เวลาส่งสอบ:</strong> <span id="slip-submit-time">-</span></div>
+          <div><strong>ระยะเวลาที่ใช้:</strong> <span id="slip-duration">-</span></div>
+          <div><strong>คะแนนที่ได้:</strong> <span id="slip-score" style="color: var(--gold-glow); font-weight: bold;">-</span></div>
+          <div><strong>สถานะการประเมิน:</strong> <span id="slip-status" style="font-weight: 600;">-</span></div>
+        </div>
+
+        <div class="slip-verification">
+          <div>
+            <div style="font-size: 0.75rem; color: var(--text-secondary);">รหัสตรวจสอบความถูกต้อง (Verification Code):</div>
+            <div class="verification-code" id="slip-verification-code">COOLNUT-GRAV-M4-01-0000</div>
+          </div>
+          <button class="btn btn-outline" id="btn-copy-code" style="padding: 0.35rem 0.75rem; font-size: 0.8rem;">
+            <span>📋</span> คัดลอกรหัสส่งครู
+          </button>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="modal-actions" style="display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap; margin-bottom: 1.5rem;">
+        <button class="btn btn-gold" id="btn-print-slip">
+          <span>🖨️</span> พิมพ์ / บันทึกใบผลคะแนน
+        </button>
+        <button class="btn btn-outline" id="btn-toggle-solutions">
+          <span>📖</span> ดูวิธีทำและเฉลยละเอียด
+        </button>
+        <button class="btn btn-primary" id="btn-close-modal">
+          <span>✖</span> ปิดหน้าต่าง
+        </button>
+      </div>
+
+      <!-- Detailed Exam Solutions Review -->
+      <div id="exam-solutions-review-container" style="display: none;">
+        <h4 style="color: var(--cyan-glow); margin-bottom: 1rem; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 0.5rem;">
+          เฉลยและวิธีคิดละเอียดทั้ง 4 ข้อ (สำหรับตรวจทานกับครู)
+        </h4>
+        <div id="exam-solutions-items"></div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Toast Message Element -->
+  <div class="toast-msg" id="toast-msg">
+    <span>💡</span> <span id="toast-text">ข้อความ</span>
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/physics-data.js"></script>
+  <script src="js/physics-engine.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
