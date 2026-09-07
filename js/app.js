@@ -249,7 +249,7 @@
       const weight = 80.0 * gRatio; // Base weight 80 N on Earth
       const fallTime = 1.0 / Math.sqrt(gRatio); // Base fall time 1.0 s on Earth
 
-      metricG.textContent = `${gRatio.toFixed(2)} g_E`;
+      metricG.innerHTML = `${gRatio.toFixed(2)} <i>g</i><sub>E</sub>`;
       metricW.textContent = `${weight.toFixed(1)} N`;
       metricT.textContent = `${fallTime.toFixed(2)} s`;
 
@@ -1071,23 +1071,24 @@
     });
   }
 
+  let mathTypesetPromise = Promise.resolve();
   function renderMath(target) {
     if (window.MathJax && window.MathJax.typesetPromise) {
-      try {
-        const targets = target ? (Array.isArray(target) ? target : [target]) : [document.body];
-        const validTargets = targets.filter(t => t && t.nodeType);
-        if (validTargets.length === 0) return;
-        if (window.MathJax.typesetClear) {
-          window.MathJax.typesetClear(validTargets);
-        }
-        window.MathJax.typesetPromise(validTargets).catch(err => {
+      const targets = target ? (Array.isArray(target) ? target : [target]) : [document.body];
+      const validTargets = targets.filter(t => t && t.nodeType);
+      if (validTargets.length === 0) return;
+      mathTypesetPromise = mathTypesetPromise
+        .then(() => {
+          if (window.MathJax.typesetClear) {
+            window.MathJax.typesetClear(validTargets);
+          }
+          return window.MathJax.typesetPromise(validTargets);
+        })
+        .catch(err => {
           console.warn('MathJax typeset error:', err);
         });
-      } catch (e) {
-        console.warn('MathJax error:', e);
-      }
     } else if (window.MathJax && window.MathJax.startup && window.MathJax.startup.promise) {
-      window.MathJax.startup.promise.then(() => renderMath(target));
+      mathTypesetPromise = window.MathJax.startup.promise.then(() => renderMath(target));
     } else {
       setTimeout(() => renderMath(target), 150);
     }
