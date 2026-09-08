@@ -1530,3 +1530,24 @@ mjx-container:not([display="true"]) {
     color: #000 !important;
   }
 }
+
+/* Anti-Cheat HUD Warning Badge & Indicators */
+.hud-cheat-status {
+  color: var(--crimson);
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 0.35rem 0.75rem;
+  background: rgba(255, 71, 126, 0.15);
+  border: 1px solid var(--crimson);
+  border-radius: var(--radius-sm);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  animation: pulse-warn 1.5s infinite;
+}
+
+@keyframes pulse-warn {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.8; transform: scale(1.02); }
+}
+

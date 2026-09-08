@@ -196,11 +196,12 @@
 
             <div class="exam-rule-list">
               <div>⏱️ <strong>เวลาในการสอบ:</strong> 15 นาที (นับถอยหลังต่อเนื่อง หากหมดเวลาจะส่งคำตอบที่ทำไว้ตรวจทันที)</div>
+              <div>⏳ <strong>เวลาทำขั้นต่ำ:</strong> อย่างน้อย 60 วินาที เพื่อให้คิดและตรวจทานรอบคอบก่อนส่ง</div>
               <div>🎲 <strong>จำนวนข้อสอบ:</strong> 4 ข้อ สุ่มจาก 20 ข้อ พร้อมสุ่มตัวเลขใหม่ทุกครั้ง</div>
               <div>📝 <strong>ข้อ 1 - 2 (ปรนัย):</strong> ข้อละ 2.0 คะแนน (รวม 4.0 คะแนน) ยอมรับคำตอบทศนิยมคลาดเคลื่อน ±0.05</div>
               <div>✏️ <strong>ข้อ 3 - 4 (เติมคำ+หน่วย):</strong> ข้อละ 3.0 คะแนน (รวม 6.0 คะแนน: ตัวเลข 2.0 คะแนน + หน่วย 1.0 คะแนน)</div>
               <div>🎯 <strong>คะแนนรวม:</strong> 10.0 คะแนนเต็ม (ระบบจะสรุปคะแนน แสดงเฉลย และฉลองเมื่อกดส่งข้อสอบแล้วเท่านั้น)</div>
-              <div>🛡️ <strong>ระบบกันโกง:</strong> บันทึกเวลาเริ่ม-ส่ง และจำข้อสอบเดิมป้องกันการรีเฟรชหนีข้อสอบ</div>
+              <div>🛡️ <strong>ระบบกันโกงเข้มงวด:</strong> ห้ามสลับแท็บ/ย่อจอ ระบบจะบันทึกประวัติการสลับหน้าจอลงในใบผลสอบและรหัสตรวจสอบความถูกต้อง</div>
               <div>🐱 <strong>รางวัลพิเศษ:</strong> หากสอบได้ 10 คะแนนเต็ม จะมีแมวอวกาศออกมาเต้นฉลอง!</div>
             </div>
 
@@ -225,6 +226,10 @@
             <div class="timer-container" id="timer-box">
               <span>⏳</span>
               <span class="timer-digits" id="exam-countdown">15:00</span>
+            </div>
+
+            <div class="hud-cheat-status" id="hud-cheat-status" style="display: none;">
+              ⚠️ สลับจอ: <span id="hud-cheat-count">0</span> ครั้ง
             </div>
 
             <button class="btn btn-danger" id="btn-hud-submit">
@@ -312,6 +317,7 @@
           <div><strong>ระยะเวลาที่ใช้:</strong> <span id="slip-duration">-</span></div>
           <div><strong>คะแนนที่ได้:</strong> <span id="slip-score" style="color: var(--gold-glow); font-weight: bold;">-</span></div>
           <div><strong>สถานะการประเมิน:</strong> <span id="slip-status" style="font-weight: 600;">-</span></div>
+          <div style="grid-column: 1 / -1;"><strong>บันทึกความซื่อสัตย์:</strong> <span id="slip-cheat-warnings" style="font-weight: 600; color: var(--emerald);">ปกติ (ไม่พบการสลับหน้าจอ)</span></div>
         </div>
 
         <div class="slip-verification">

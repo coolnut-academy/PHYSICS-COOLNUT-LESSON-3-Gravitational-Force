@@ -24,7 +24,9 @@
       questions: [],
       submissions: {},
       isSubmitted: false,
-      result: null
+      result: null,
+      cheatWarnings: 0,
+      minTimeSeconds: 60
     },
 
     // Sandbox State
@@ -178,8 +180,9 @@
 
     // Check if user is in active exam and trying to switch away
     if (AppState.exam.active && !AppState.exam.isSubmitted && tabId !== 'tab-exam') {
-      const confirmLeave = confirm('⚠️ คุณกำลังอยู่ในระหว่างการสอบจับเวลา 15 นาที! ต้องการสลับหน้าหรือไม่? (เวลานับถอยหลังจะยังคงดำเนินต่อไป)');
-      if (!confirmLeave) return;
+      Sound.incorrect();
+      showToast('🚫 อยู่ในระหว่างการสอบจับเวลา 15 นาที! ไม่อนุญาตให้สลับแท็บจนกว่าจะส่งข้อสอบ');
+      return;
     }
 
     document.querySelectorAll('.nav-btn').forEach(btn => {
@@ -490,6 +493,33 @@
   // ==========================================================================
   // Exam System (15-Minute Timed Test with Anti-Cheat & Auto-Submit)
   // ==========================================================================
+  let lastCheatWarningTime = 0;
+  function handleAntiCheatDetection() {
+    if (!AppState.exam.active || AppState.exam.isSubmitted) return;
+    const now = Date.now();
+    if (now - lastCheatWarningTime < 2000) return; // Debounce 2s
+    lastCheatWarningTime = now;
+
+    AppState.exam.cheatWarnings = (AppState.exam.cheatWarnings || 0) + 1;
+    saveExamSession();
+    updateExamHudCheatStatus();
+    Sound.incorrect();
+    showToast(`⚠️ ตรวจพบการสลับหน้าจอหรือย่อบราวเซอร์! (ครั้งที่ ${AppState.exam.cheatWarnings}) การกระทำนี้ถูกบันทึกไว้ในผลสอบ`);
+  }
+
+  function updateExamHudCheatStatus() {
+    const statusEl = document.getElementById('hud-cheat-status');
+    const countEl = document.getElementById('hud-cheat-count');
+    if (statusEl && countEl) {
+      if (AppState.exam.cheatWarnings > 0) {
+        statusEl.style.display = 'inline-flex';
+        countEl.textContent = AppState.exam.cheatWarnings;
+      } else {
+        statusEl.style.display = 'none';
+      }
+    }
+  }
+
   function restoreExamSession() {
     try {
       const raw = localStorage.getItem(STORAGE_KEY);
@@ -519,7 +549,9 @@
         questions: session.questions,
         submissions: session.submissions || {},
         isSubmitted: false,
-        result: null
+        result: null,
+        cheatWarnings: session.cheatWarnings || 0,
+        minTimeSeconds: 60
       };
 
       // Switch to exam UI
@@ -527,6 +559,7 @@
       document.getElementById('exam-active-screen').style.display = 'block';
       document.getElementById('hud-student-name').textContent = session.student.name;
       document.getElementById('hud-student-info').textContent = `ชั้น ${session.student.room} • เลขที่ ${session.student.number}`;
+      updateExamHudCheatStatus();
 
       renderExamQuestions();
       startExamTimer();
@@ -547,7 +580,8 @@
       startTime: AppState.exam.startTime,
       durationMinutes: AppState.exam.durationMinutes,
       questions: AppState.exam.questions,
-      submissions: AppState.exam.submissions
+      submissions: AppState.exam.submissions,
+      cheatWarnings: AppState.exam.cheatWarnings || 0
     };
     localStorage.setItem(STORAGE_KEY, JSON.stringify(session));
   }
@@ -581,9 +615,12 @@
       questions: examQuestions,
       submissions: {},
       isSubmitted: false,
-      result: null
+      result: null,
+      cheatWarnings: 0,
+      minTimeSeconds: 60
     };
 
+    updateExamHudCheatStatus();
     saveExamSession();
 
     // Show Exam Screen
@@ -770,6 +807,15 @@
     }
 
     if (!isTimeout) {
+      // Check minimum exam time required (60 seconds)
+      const elapsedSeconds = Math.floor((Date.now() - AppState.exam.startTime) / 1000);
+      if (elapsedSeconds < AppState.exam.minTimeSeconds) {
+        Sound.incorrect();
+        const remain = AppState.exam.minTimeSeconds - elapsedSeconds;
+        showToast(`⏳ คุณทำข้อสอบเร็วเกินไป! กรุณาตรวจทานข้อสอบอย่างรอบคอบอีกอย่างน้อย ${remain} วินาที ก่อนส่ง`);
+        return;
+      }
+
       // Check unanswered questions
       let answeredCount = 0;
       for (let i = 0; i < 4; i++) {
@@ -814,11 +860,13 @@
     const durationSecs = durationSeconds % 60;
     const durationStr = `${durationMins} นาที ${durationSecs} วินาที`;
 
-    // Verification code
+    // Verification code with time spent and anti-cheat tracking
     const vCode = PhysicsEngine.generateVerificationCode(
       AppState.exam.student,
       result,
-      AppState.exam.endTime
+      AppState.exam.endTime,
+      durationSeconds,
+      AppState.exam.cheatWarnings || 0
     );
 
     // Update Result Board
@@ -839,6 +887,17 @@
     if (slipStatusEl) {
       slipStatusEl.textContent = result.isFullScore ? 'ยอดเยี่ยม (10 เต็ม 10)' : (result.totalScore >= 7.0 ? 'ผ่านเกณฑ์ดีมาก' : (result.totalScore >= 5.0 ? 'ผ่านเกณฑ์' : 'ควรทบทวนเพิ่มเติม'));
       slipStatusEl.style.color = result.isFullScore ? 'var(--emerald)' : (result.totalScore >= 5.0 ? 'var(--cyan-glow)' : 'var(--crimson)');
+    }
+    const slipCheatEl = document.getElementById('slip-cheat-warnings');
+    if (slipCheatEl) {
+      const warnings = AppState.exam.cheatWarnings || 0;
+      if (warnings === 0) {
+        slipCheatEl.textContent = 'ปกติ (ไม่พบการสลับหน้าจอ)';
+        slipCheatEl.style.color = 'var(--emerald)';
+      } else {
+        slipCheatEl.textContent = `⚠️ พบการสลับหน้าจอ / ย่อบราวเซอร์ ${warnings} ครั้ง`;
+        slipCheatEl.style.color = 'var(--crimson)';
+      }
     }
     document.getElementById('slip-verification-code').textContent = vCode;
 
@@ -1068,6 +1127,16 @@
         e.preventDefault();
         e.returnValue = 'คุณกำลังอยู่ในระหว่างการสอบเก็บคะแนน ข้อมูลและเวลาจะถูกบันทึกไว้';
       }
+    });
+
+    // Anti-Cheat: Detect tab switching and window blur
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) {
+        handleAntiCheatDetection();
+      }
+    });
+    window.addEventListener('blur', () => {
+      handleAntiCheatDetection();
     });
   }
 
