@@ -467,9 +467,9 @@ const PHYSICS_DATA = {
       unit: "วินาที (s)",
       solution: `
         <div class="solution-step">
-          <p>หาความเร่งโน้มถ่วง $\\frac{g_A}{g_E} = \\left(\\frac{M_A}{M_E}\\right) \\left(\\frac{R_E}{R_A}\\right)^2 = \\frac{9}{3^2} = \\frac{9}{9} = 1$</p>
-          <p>เมื่อ $g_A = g_E$ เวลาตกย่อมเท่ากัน:</p>
-          <div class="math-line">\\[ t_A = t_E \\times \\sqrt{\\frac{g_E}{g_A}} = 2.0 \\times \\sqrt{1} = 2.0\\text{ s} \\]</div>
+          <p><strong>วิธีลัด (หัวข้อ 5.2):</strong> $\\frac{t_A}{t_E} = \\left(\\frac{R_A}{R_E}\\right)\\sqrt{\\frac{M_E}{M_A}} = 3 \\times \\sqrt{\\frac{1}{9}} = 3 \\times \\frac{1}{3} = 1.0$</p>
+          <div class="math-line">\\[ t_A = 1.0 \\times 2.0\\text{ s} = 2.0\\text{ s} \\]</div>
+          <p><em>(หรือวิธีคิดจากอัตราส่วน $g$: $\\frac{g_A}{g_E} = \\frac{9}{3^2} = 1.0 \\implies t_A = \\frac{2.0}{\\sqrt{1.0}} = 2.0\\text{ s}$)</em></p>
         </div>
         <p class="ans-badge"><strong>ตอบ:</strong> <strong>$2.0$ วินาที (s)</strong></p>
       `
@@ -484,9 +484,9 @@ const PHYSICS_DATA = {
       unit: "วินาที (s)",
       solution: `
         <div class="solution-step">
-          <p>หาค่า $g$: $\\frac{g_B}{g_E} = \\frac{4}{4^2} = \\frac{4}{16} = \\frac{1}{4}$</p>
-          <div class="math-line">\\[ \\frac{t_B}{t_E} = \\sqrt{\\frac{g_E}{g_B}} = \\sqrt{4} = 2 \\]</div>
+          <p><strong>วิธีลัด (หัวข้อ 5.2):</strong> $\\frac{t_B}{t_E} = \\left(\\frac{R_B}{R_E}\\right)\\sqrt{\\frac{M_E}{M_B}} = 4 \\times \\sqrt{\\frac{1}{4}} = 4 \\times \\frac{1}{2} = 2$</p>
           <div class="math-line">\\[ t_B = 2 \\times 1.5\\text{ s} = 3.0\\text{ s} \\]</div>
+          <p><em>(หรือวิธีคิดจากอัตราส่วน $g$: $\\frac{g_B}{g_E} = \\frac{4}{4^2} = \\frac{1}{4} \\implies t_B = 1.5 \\times \\sqrt{4} = 3.0\\text{ s}$)</em></p>
         </div>
         <p class="ans-badge"><strong>ตอบ:</strong> <strong>$3.0$ วินาที (s)</strong></p>
       `
@@ -501,9 +501,9 @@ const PHYSICS_DATA = {
       unit: "วินาที (s)",
       solution: `
         <div class="solution-step">
-          <p>หาค่า $g$: $\\frac{g_C}{g_E} = \\frac{16}{2^2} = \\frac{16}{4} = 4$</p>
-          <div class="math-line">\\[ \\frac{t_C}{t_E} = \\sqrt{\\frac{g_E}{g_C}} = \\sqrt{\\frac{1}{4}} = \\frac{1}{2} \\]</div>
+          <p><strong>วิธีลัด (หัวข้อ 5.2):</strong> $\\frac{t_C}{t_E} = \\left(\\frac{R_C}{R_E}\\right)\\sqrt{\\frac{M_E}{M_C}} = 2 \\times \\sqrt{\\frac{1}{16}} = 2 \\times \\frac{1}{4} = \\frac{1}{2}$</p>
           <div class="math-line">\\[ t_C = \\frac{1}{2} \\times 4.0\\text{ s} = 2.0\\text{ s} \\]</div>
+          <p><em>(หรือวิธีคิดจากอัตราส่วน $g$: $\\frac{g_C}{g_E} = \\frac{16}{2^2} = 4 \\implies t_C = \\frac{4.0}{\\sqrt{4}} = 2.0\\text{ s}$)</em></p>
         </div>
         <p class="ans-badge"><strong>ตอบ:</strong> <strong>$2.0$ วินาที (s)</strong></p>
       `

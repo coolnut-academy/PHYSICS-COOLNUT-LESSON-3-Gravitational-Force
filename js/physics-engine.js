@@ -151,31 +151,42 @@ const PhysicsEngine = (function() {
         };
       }
       case 12: {
-        const { km, kr, tE } = vars;
-        const gRatio = km / (kr * kr);
-        const tA = round2(tE / Math.sqrt(gRatio));
+        const km = vars.km !== undefined ? vars.km : vars.mRatio;
+        const kr = vars.kr !== undefined ? vars.kr : vars.rRatio;
+        const tE = vars.tE;
+        const rawGRatio = km / (kr * kr);
+        const tRatio = round2(kr / Math.sqrt(km));
+        const tA = round2(tE * tRatio);
+        const gRatio = round2(rawGRatio);
         return {
           correctAnswer: tA,
           unit: "วินาที (s)",
-          solutionSummary: `$\\frac{g_A}{g_E} = \\frac{${km}}{(${kr})^2} = ${round2(gRatio)} \\implies t_A = \\frac{${tE.toFixed(1)}}{\\sqrt{${round2(gRatio)}}} = ${tA.toFixed(1)}\\text{ s}$`
+          solutionSummary: `$\\text{วิธีลัด (หัวข้อ 5.2): } \\frac{t_A}{t_E} = \\left(\\frac{R_A}{R_E}\\right)\\sqrt{\\frac{M_E}{M_A}} = ${kr}\\sqrt{\\frac{1}{${km}}} = ${tRatio.toFixed(1)} \\implies t_A = ${tRatio.toFixed(1)} \\times ${tE.toFixed(1)} = ${tA.toFixed(1)}\\text{ s}$ (หรือคิดจาก $g$: $\\frac{g_A}{g_E} = \\frac{${km}}{(${kr})^2} = ${gRatio} \\implies t_A = \\frac{${tE.toFixed(1)}}{\\sqrt{${gRatio}}} = ${tA.toFixed(1)}\\text{ s}$)`
         };
       }
       case 13: {
-        const { km, kr, tE, s } = vars;
+        const km = vars.km !== undefined ? vars.km : vars.mRatio;
+        const kr = vars.kr !== undefined ? vars.kr : vars.rRatio;
+        const tE = vars.tE;
+        const s = Math.round(kr / Math.sqrt(km)); // tB / tE = s
         const tB = round2(tE * s);
         return {
           correctAnswer: tB,
           unit: "วินาที (s)",
-          solutionSummary: `$\\frac{g_B}{g_E} = \\frac{${km}}{(${kr})^2} = \\frac{1}{${s * s}} \\implies t_B = ${tE.toFixed(1)} \\times \\sqrt{${s * s}} = ${tB.toFixed(1)}\\text{ s}$`
+          solutionSummary: `$\\text{วิธีลัด (หัวข้อ 5.2): } \\frac{t_B}{t_E} = \\left(\\frac{R_B}{R_E}\\right)\\sqrt{\\frac{M_E}{M_B}} = ${kr}\\sqrt{\\frac{1}{${km}}} = ${s} \\implies t_B = ${s} \\times ${tE.toFixed(1)} = ${tB.toFixed(1)}\\text{ s}$ (หรือคิดจาก $g$: $\\frac{g_B}{g_E} = \\frac{${km}}{(${kr})^2} = \\frac{1}{${s * s}} \\implies t_B = ${tE.toFixed(1)} \\times \\sqrt{${s * s}} = ${tB.toFixed(1)}\\text{ s}$)`
         };
       }
       case 14: {
-        const { km, kr, tE, s } = vars;
+        const km = vars.km !== undefined ? vars.km : vars.mRatio;
+        const kr = vars.kr !== undefined ? vars.kr : vars.rRatio;
+        const tE = vars.tE;
+        const rawGRatio = km / (kr * kr);
+        const s = Math.round(Math.sqrt(rawGRatio)); // gRatio = s^2
         const tC = round2(tE / s);
         return {
           correctAnswer: tC,
           unit: "วินาที (s)",
-          solutionSummary: `$\\frac{g_C}{g_E} = \\frac{${km}}{(${kr})^2} = ${s * s} \\implies t_C = \\frac{${tE.toFixed(1)}}{\\sqrt{${s * s}}} = ${tC.toFixed(1)}\\text{ s}$`
+          solutionSummary: `$\\text{วิธีลัด (หัวข้อ 5.2): } \\frac{t_C}{t_E} = \\left(\\frac{R_C}{R_E}\\right)\\sqrt{\\frac{M_E}{M_C}} = ${kr}\\sqrt{\\frac{1}{${km}}} = \\frac{1}{${s}} \\implies t_C = \\frac{${tE.toFixed(1)}}{${s}} = ${tC.toFixed(1)}\\text{ s}$ (หรือคิดจาก $g$: $\\frac{g_C}{g_E} = \\frac{${km}}{(${kr})^2} = ${s * s} \\implies t_C = \\frac{${tE.toFixed(1)}}{\\sqrt{${s * s}}} = ${tC.toFixed(1)}\\text{ s}$)`
         };
       }
       case 15: {
@@ -226,12 +237,14 @@ const PhysicsEngine = (function() {
         };
       }
       case 20: {
-        const { mG, rG, tE } = vars;
+        const mG = vars.mG !== undefined ? vars.mG : vars.mRatio;
+        const rG = vars.rG !== undefined ? vars.rG : vars.rRatio;
+        const tE = vars.tE;
         const tHigh = round2(2.0 * tE);
         return {
           correctAnswer: tHigh,
           unit: "วินาที (s)",
-          solutionSummary: `$g_{G,\\text{surf}} = \\frac{${mG}}{(${rG})^2} = 1.0 \\implies$ ที่ $r=2R$: $g_{\\text{high}} = \\frac{1}{4} \\implies t_{\\text{high}} = ${tE.toFixed(1)} \\times \\sqrt{4} = ${tHigh.toFixed(1)}\\text{ s}$`
+          solutionSummary: `$\\text{ขั้นที่ 1 (ผิวดาว G): } \\frac{g_{G,\\text{surf}}}{g_E} = \\frac{${mG}}{(${rG})^2} = 1.0 \\implies g_{G,\\text{surf}} = g_E$, $\\text{ขั้นที่ 2 (ที่ } h = R_G \\implies r = 2R_G): g_{\\text{high}} = g_{G,\\text{surf}} \\times \\left(\\frac{R_G}{2R_G}\\right)^2 = \\frac{g_E}{4}$, $\\text{ขั้นที่ 3 (เวลาตก): } t \\propto \\frac{1}{\\sqrt{g}} \\implies \\frac{t_{\\text{high}}}{t_E} = \\sqrt{\\frac{g_E}{g_{\\text{high}}}} = \\sqrt{4} = 2 \\implies t_{\\text{high}} = 2 \\times ${tE.toFixed(1)} = ${tHigh.toFixed(1)}\\text{ s}$`
         };
       }
       default:
@@ -488,9 +501,16 @@ const PhysicsEngine = (function() {
 
     // ข้อ 12: มวล + รัศมี ➔ เวลาตก
     12: function(randomize = false) {
-      const kr = randomize ? randomChoice([2, 3, 4, 5]) : 3;
-      const s = randomize ? randomChoice([1, 2]) : 1;
-      const km = round2((kr * kr) / (s * s));
+      const validConfigs = [
+        { kr: 3, km: 9.0 },   // ค่ามาตรฐาน: km = 9, kr = 3 -> tA = 1*tE
+        { kr: 2, km: 4.0 },   // km = 4, kr = 2 -> tA = 1*tE
+        { kr: 4, km: 16.0 },  // km = 16, kr = 4 -> tA = 1*tE
+        { kr: 3, km: 2.25 },  // km = 2.25, kr = 3 -> tA = 2*tE
+        { kr: 4, km: 4.0 },   // km = 4.0, kr = 4 -> tA = 2*tE
+        { kr: 5, km: 6.25 }   // km = 6.25, kr = 5 -> tA = 2*tE
+      ];
+      const cfg = randomize ? randomChoice(validConfigs) : validConfigs[0];
+      const { kr, km } = cfg;
       const tE = randomize ? randomChoice([1.5, 2.0, 2.5, 3.0]) : 2.0;
       const vars = { km, kr, tE };
       const sol = solveQuestion(12, vars);
@@ -508,13 +528,22 @@ const PhysicsEngine = (function() {
       };
     },
 
-    // ข้อ 13: มวล และ รัศมี ➔ g น้อยลง ➔ เวลาตกนานขึ้น
+    // ข้อ 13: มวล และ รัศมี ➔ g น้อยลง ➔ เวลาตกนานขึ้น (tB = tE * s)
     13: function(randomize = false) {
-      const kr = randomize ? randomChoice([3, 4, 5, 6]) : 4;
-      const s = randomize ? randomChoice([2, 3]) : 2; // t ratio = s
-      const km = round2((kr * kr) / (s * s));
+      // ใช้เฉพาะคู่ที่ทำให้ km = (kr/s)^2 เป็นทศนิยมรู้จบหรือจำนวนเต็มเสมอ
+      // กำจัดค่าเศษส่วนไม่รู้จบ เช่น 16/9 = 1.78, 25/9 = 2.78 ซึ่งทำให้เฉลยเพี้ยน
+      const validConfigs = [
+        { kr: 4, km: 4.0 },   // ค่ามาตรฐานต้นฉบับ: km = 4, kr = 4 -> tB = 2*tE
+        { kr: 3, km: 2.25 },  // km = 2.25, kr = 3 -> tB = 2*tE
+        { kr: 5, km: 6.25 },  // km = 6.25, kr = 5 -> tB = 2*tE
+        { kr: 6, km: 9.0 },   // km = 9.0, kr = 6 -> tB = 2*tE
+        { kr: 6, km: 4.0 },   // km = 4.0, kr = 6 -> tB = 3*tE
+        { kr: 3, km: 1.0 }    // km = 1.0, kr = 3 -> tB = 3*tE
+      ];
+      const cfg = randomize ? randomChoice(validConfigs) : validConfigs[0];
+      const { kr, km } = cfg;
       const tE = randomize ? randomChoice([1.0, 1.2, 1.5, 2.0, 2.5]) : 1.5;
-      const vars = { km, kr, tE, s };
+      const vars = { km, kr, tE };
       const sol = solveQuestion(13, vars);
 
       return {
@@ -530,13 +559,20 @@ const PhysicsEngine = (function() {
       };
     },
 
-    // ข้อ 14: มวล และ รัศมี ➔ g มากขึ้น ➔ เวลาตกเร็วขึ้น
+    // ข้อ 14: มวล และ รัศมี ➔ g มากขึ้น ➔ เวลาตกเร็วขึ้น (tC = tE / s)
     14: function(randomize = false) {
-      const kr = randomize ? randomChoice([2, 3, 4]) : 2;
-      const s = randomize ? randomChoice([2, 3, 4]) : 2; // g = s^2
-      const km = (s * s) * (kr * kr);
-      const tE = randomize ? randomChoice([2.0, 3.0, 4.0, 6.0, 8.0]) : 4.0;
-      const vars = { km, kr, tE, s };
+      // เลือก tE ที่หารด้วย s ลงตัวเสมอ เพื่อให้คำตอบ tC เป็นตัวเลขที่สะอาด ไม่ปัดเศษเพี้ยน
+      const validConfigs = [
+        { kr: 2, s: 2, km: 16, tECandidates: [2.0, 4.0, 6.0, 8.0] }, // km = 16, kr = 2 -> s = 2 (ค่ามาตรฐาน)
+        { kr: 3, s: 2, km: 36, tECandidates: [2.0, 4.0, 6.0, 8.0] }, // km = 36, kr = 3 -> s = 2
+        { kr: 2, s: 3, km: 36, tECandidates: [3.0, 6.0, 9.0] },       // km = 36, kr = 2 -> s = 3
+        { kr: 3, s: 3, km: 81, tECandidates: [3.0, 6.0, 9.0] },       // km = 81, kr = 3 -> s = 3
+        { kr: 2, s: 4, km: 64, tECandidates: [4.0, 8.0] }             // km = 64, kr = 2 -> s = 4
+      ];
+      const cfg = randomize ? randomChoice(validConfigs) : validConfigs[0];
+      const { kr, km, tECandidates } = cfg;
+      const tE = randomize ? randomChoice(tECandidates) : 4.0;
+      const vars = { km, kr, tE };
       const sol = solveQuestion(14, vars);
 
       return {
@@ -702,10 +738,10 @@ const PhysicsEngine = (function() {
 
     for (const c of candidates) {
       if (choices.size >= 5) break;
-      if (c > 0 && Math.abs(c - correctAnswer) > 0.05) {
+      if (c > 0 && Math.abs(c - correctAnswer) > 0.06) {
         let isDistinct = true;
         for (const existing of choices) {
-          if (Math.abs(existing - c) < 0.05) {
+          if (Math.abs(existing - c) < 0.06) {
             isDistinct = false;
             break;
           }
@@ -722,7 +758,7 @@ const PhysicsEngine = (function() {
       const fallback = round2(correctAnswer + offset);
       let isDistinct = true;
       for (const existing of choices) {
-        if (Math.abs(existing - fallback) < 0.05) {
+        if (Math.abs(existing - fallback) < 0.06) {
           isDistinct = false;
           break;
         }
@@ -817,8 +853,13 @@ const PhysicsEngine = (function() {
       const solutionSummary = solution.solutionSummary;
 
       if (q.type === "multiple_choice") {
-        const chosenVal = parseFloat(sub.selectedChoice);
-        if (!isNaN(chosenVal) && Math.abs(chosenVal - correctAnswer) <= 0.05) {
+        const rawChoice = String(sub.selectedChoice ?? "").trim().replace(",", ".");
+        const chosenVal = parseFloat(rawChoice);
+        if (!isNaN(chosenVal) && (
+          Math.abs(chosenVal - correctAnswer) <= 0.051 ||
+          Math.abs(chosenVal - round2(correctAnswer)) <= 0.051 ||
+          Math.abs(chosenVal - parseFloat(correctAnswer.toFixed(1))) <= 0.051
+        )) {
           itemScore = q.maxScore;
           isAnswerCorrect = true;
           isUnitCorrect = true;
@@ -838,10 +879,17 @@ const PhysicsEngine = (function() {
           solutionSummary: solutionSummary
         });
       } else if (q.type === "fill_in_unit") {
-        const userNum = parseFloat(sub.userNumber);
+        const rawUserNum = String(sub.userNumber ?? "").trim().replace(",", ".");
+        const userNum = parseFloat(rawUserNum);
         const userUnit = (sub.userUnit || "").trim();
 
-        if (!isNaN(userNum) && Math.abs(userNum - correctAnswer) <= 0.05) {
+        // เกณฑ์ความคลาดเคลื่อนที่เป็นธรรม: ยอมรับความคลาดเคลื่อน Float, ทศนิยม 1 หรือ 2 ตำแหน่ง
+        const diff = Math.abs(userNum - correctAnswer);
+        const diff1Dec = Math.abs(userNum - parseFloat(correctAnswer.toFixed(1)));
+        const diffRound2 = Math.abs(userNum - round2(correctAnswer));
+        const tolerance = Math.max(0.06, Math.abs(correctAnswer) * 0.02); // 0.06 หรือ 2%
+
+        if (!isNaN(userNum) && (diff <= tolerance || diff1Dec <= 0.051 || diffRound2 <= 0.051)) {
           itemScore += q.answerScoreWeight;
           isAnswerCorrect = true;
         }
@@ -916,3 +964,8 @@ const PhysicsEngine = (function() {
     UNIT_OPTIONS
   };
 })();
+
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = PhysicsEngine;
+}
+
